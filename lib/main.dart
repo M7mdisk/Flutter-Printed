@@ -12,25 +12,22 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Printed Login',
       theme: ThemeData(
-        primarySwatch: Colors.purple,
-      ),
-      home: MyHomePage(title: 'Printed Login'),
+          primarySwatch: Colors.purple, accentColor: Colors.purple[900]),
+      home: Login(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+// class MyHomePage extends StatefulWidget {
+//   MyHomePage({Key key}) : super(key: key);
 
-  final String title;
+//   @override
+//   _MyHomePageState createState() => _MyHomePageState();
+// }
 
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Login();
-  }
-}
+// class _MyHomePageState extends State<MyHomePage> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Login();
+//   }
+// }

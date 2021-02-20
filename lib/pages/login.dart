@@ -1,10 +1,50 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'dart:convert' show ascii, base64, json, jsonDecode;
 
-class Login extends StatelessWidget {
-  const Login({
-    Key key,
-  }) : super(key: key);
+final storage = FlutterSecureStorage();
+const BASE_URL = "http://192.168.8.103:8000";
+
+class Login extends StatefulWidget {
+  @override
+  _LoginState createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  Future<String> attemptLogIn(String username, String password) async {
+    var res = await http.post("${BASE_URL}/api/token/both/", body: {
+      "username": username,
+      "password": password
+    }).timeout(Duration(seconds: 5));
+
+    if (res.statusCode == 200) return res.body;
+    return null;
+  }
+
+  void fetchshit() async {
+    var username = _usernameController.text;
+    var password = _passwordController.text;
+    try {
+      var jwt = await attemptLogIn(username, password);
+      if (jwt != null) {
+        Map<String, dynamic> data = jsonDecode(jwt);
+        storage.write(key: "access_token", value: data["access"]);
+        storage.write(key: "refresh_token", value: data["refresh"]);
+        // print(jwt);
+        // Navigator.push(context,
+        //     MaterialPageRoute(builder: (context) => HomePage.fromBase64(jwt)));
+      } else {
+        print("Username or password incorrect");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +85,7 @@ class Login extends StatelessWidget {
                 ),
                 SizedBox(height: 45.0),
                 TextField(
+                  controller: _usernameController,
                   obscureText: false,
                   style: TextStyle(fontFamily: 'Montserrat', fontSize: 20.0),
                   decoration: InputDecoration(
@@ -56,6 +97,7 @@ class Login extends StatelessWidget {
                 ),
                 SizedBox(height: 25.0),
                 TextField(
+                  controller: _passwordController,
                   obscureText: true,
                   style: TextStyle(fontFamily: 'Montserrat', fontSize: 20.0),
                   decoration: InputDecoration(
@@ -75,7 +117,9 @@ class Login extends StatelessWidget {
                   child: MaterialButton(
                     minWidth: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
-                    onPressed: () {},
+                    onPressed: () {
+                      fetchshit();
+                    },
                     child: Text("Login",
                         textAlign: TextAlign.center,
                         style: TextStyle(
