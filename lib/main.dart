@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:printed/pages/login.dart';
 import 'package:printed/pages/register.dart';
+import 'package:printed/pages/userInfo.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,20 +15,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           primarySwatch: Colors.purple, accentColor: Colors.purple[900]),
       home: Login(),
+      routes: <String, WidgetBuilder>{
+        '/userinfo': (BuildContext context) => UserInfo(),
+        '/register': (BuildContext context) => Register(),
+      },
     );
   }
 }
-
-// class MyHomePage extends StatefulWidget {
-//   MyHomePage({Key key}) : super(key: key);
-
-//   @override
-//   _MyHomePageState createState() => _MyHomePageState();
-// }
-
-// class _MyHomePageState extends State<MyHomePage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Login();
-//   }
-// }
