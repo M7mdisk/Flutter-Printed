@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:printed/auth/auth.dart';
 import 'package:printed/models/User.dart';
+import 'package:printed/models/snackMessage.dart';
 
 class UserInfo extends StatefulWidget {
   @override
@@ -11,6 +12,8 @@ class UserInfo extends StatefulWidget {
 }
 
 class _UserInfoState extends State<UserInfo> {
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
+
   Future<User> futureUser;
 
   @override
@@ -35,75 +38,69 @@ class _UserInfoState extends State<UserInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        key: _scaffoldKey,
         backgroundColor: Colors.grey[100],
-        appBar: AppBar(
-          elevation: 0,
-          title: Center(
-              child: Text(
-            "User Info",
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-          )),
-        ),
-        body: FutureBuilder<User>(
-            future: futureUser,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Padding(
-                  padding:
-                      EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    // mainAxisAlignment: ,
-                    children: [
-                      Center(
-                        child: CircleAvatar(
-                          radius: 120,
-                          backgroundImage:
-                              Image.network(snapshot.data.avatarUrl).image,
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 40),
+          child: FutureBuilder<User>(
+              future: futureUser,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Padding(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      // mainAxisAlignment: ,
+                      children: [
+                        Center(
+                          child: CircleAvatar(
+                            radius: 120,
+                            backgroundImage:
+                                Image.network(snapshot.data.avatarUrl).image,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 30),
-                      Text(
-                        "NAME",
-                        style: TextStyle(
-                            fontSize: 25.0,
-                            letterSpacing: 1,
-                            fontWeight: FontWeight.w300),
-                      ),
-                      SizedBox(height: 10),
-                      Center(
-                        child: Text(
-                          "${snapshot.data.firstName} ${snapshot.data.lastName}",
+                        SizedBox(height: 30),
+                        Text(
+                          "NAME",
                           style: TextStyle(
-                              fontSize: 30.0,
+                              fontSize: 25.0,
                               letterSpacing: 1,
-                              fontWeight: FontWeight.w800),
+                              fontWeight: FontWeight.w300),
                         ),
-                      ),
-                      SizedBox(height: 30),
-                      Text(
-                        "EMAIL",
-                        style: TextStyle(
-                            fontSize: 25.0,
-                            letterSpacing: 1,
-                            fontWeight: FontWeight.w300),
-                      ),
-                      SizedBox(height: 10),
-                      Center(
-                        child: Text(
-                          snapshot.data.email,
+                        SizedBox(height: 10),
+                        Center(
+                          child: Text(
+                            "${snapshot.data.firstName} ${snapshot.data.lastName}",
+                            style: TextStyle(
+                                fontSize: 30.0,
+                                letterSpacing: 1,
+                                fontWeight: FontWeight.w800),
+                          ),
+                        ),
+                        SizedBox(height: 30),
+                        Text(
+                          "EMAIL",
                           style: TextStyle(
-                              fontSize: 30.0,
+                              fontSize: 25.0,
                               letterSpacing: 1,
-                              fontWeight: FontWeight.w800),
+                              fontWeight: FontWeight.w300),
                         ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          ElevatedButton(
+                        SizedBox(height: 10),
+                        Center(
+                          child: Text(
+                            snapshot.data.email,
+                            style: TextStyle(
+                                fontSize: 30.0,
+                                letterSpacing: 1,
+                                fontWeight: FontWeight.w800),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        Center(
+                          child: ElevatedButton(
                             child: Text(
                               "Logout",
                               style: TextStyle(fontSize: 20),
@@ -111,18 +108,18 @@ class _UserInfoState extends State<UserInfo> {
                             onPressed: () {
                               logoutUser(context);
                             },
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                );
-              } else if (snapshot.hasError) {
-                return Text("${snapshot.error}");
-              }
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text("${snapshot.error}");
+                }
 
-              // By default, show a loading spinner.
-              return Center(child: CircularProgressIndicator());
-            }));
+                // By default, show a loading spinner.
+                return Center(child: CircularProgressIndicator());
+              }),
+        ));
   }
 }

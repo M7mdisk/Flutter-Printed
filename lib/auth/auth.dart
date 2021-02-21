@@ -15,9 +15,10 @@ Future<http.Response> loginUser(String username, String password) async {
   storage.write(key: "access_token", value: data["access"]);
   storage.write(key: "refresh_token", value: data["refresh"]);
   return res;
-  // print(jwt);
-  // Navigator.push(context,
-  //     MaterialPageRoute(builder: (context) => HomePage.fromBase64(jwt)));
+}
+
+Future<bool> isLoggedIn() async {
+  return (await storage.read(key: "access_token")) != null;
 }
 
 void refreshToken() async {
@@ -45,4 +46,9 @@ Future<http.Response> authRequest(String endPoint) async {
 
   // TODO: If result is 401 (Unauthorized) try refreshing the token and trying the request again.
   return res;
+}
+
+void printTokens() async {
+  print(await storage.read(key: "access_token"));
+  print(await storage.read(key: "refreshtoken"));
 }
